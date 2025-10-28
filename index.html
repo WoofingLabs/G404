@@ -32,7 +32,7 @@
         .scanline {
             position: absolute;
             top: 0; left: 0;
-            width: 100%; height: 100%;
+            width: 100%; height: 200%;
             background: linear-gradient(to bottom, transparent 50%, rgba(255,0,255,0.05) 50%);
             background-size: 100% 4px;
             animation: scan 6s linear infinite;
@@ -54,66 +54,71 @@
         .terminal { background: #111; border: 1px solid #333; }
     </style>
 </head>
-<body class="bg-black text-green-400 min-h-screen flex items-center justify-center overflow-hidden relative">
+<body class="bg-black text-green-400 min-h-screen flex flex-col items-center justify-start pt-10 px-4 relative overflow-x-hidden">
     <div class="scanline"></div>
     <div class="noise"></div>
 
-    <div class="container mx-auto px-4 text-center relative z-20">
-        <div class="glitch text-9xl font-bold mb-4">404</div>
-        <h1 class="text-4xl md:text-6xl mb-2 text-red-500">Not Found</h1>
-        <p class="text-xl text-gray-400 mb-8">The page you are looking for does not exist.</p>
+    <div class="w-full max-w-2xl text-center relative z-20 space-y-6 pb-20">
 
-        <div class="terminal p-6 rounded max-w-2xl mx-auto mb-8 text-left text-sm">
-            <div class="flex items-center mb-4">
+        <!-- 404 Glitch -->
+        <div class="glitch text-8xl md:text-9xl font-bold mb-2">404</div>
+        <h1 class="text-3xl md:text-5xl mb-1 text-red-500">Not Found</h1>
+        <p class="text-lg text-gray-400 mb-6">The page you are looking for does not exist.</p>
+
+        <!-- Terminal Info -->
+        <div class="terminal p-5 rounded text-left text-xs">
+            <div class="flex items-center mb-3">
                 <span class="text-red-500 mr-2">$</span>
                 <span class="blink">_</span>
             </div>
-            <p class="text-green-400 mb-2">> Initializing ERROR protocol...</p>
-            <p class="text-yellow-400 mb-2">> Contract: 0x0073f743FcAAA1Fc9fC235A886e2Ed60FDd779Eb</p>
-            <p class="text-cyan-400 mb-2">> Symbol: ERROR | 1 GT = 500,000 ERROR</p>
+            <p class="text-green-400 mb-1">> Initializing ERROR protocol...</p>
+            <p class="text-yellow-400 mb-1">> Contract: 0x0073f743FcAAA1Fc9fC235A886e2Ed60FDd779Eb</p>
+            <p class="text-cyan-400 mb-1">> Symbol: ERROR | 1 GT = 500,000 ERROR</p>
             <p class="text-gray-500">> Type 'subscribe' or 'transfer' to continue...</p>
         </div>
 
-        <!-- 认购进度 -->
-        <div class="terminal p-4 rounded max-w-2xl mx-auto mb-6">
-            <p class="text-xs text-gray-500 mb-2">PROGRESS</p>
+        <!-- 进度条 -->
+        <div class="terminal p-3 rounded">
+            <p class="text-xs text-gray-500 mb-1">PROGRESS</p>
             <div class="w-full bg-gray-800 rounded h-2 overflow-hidden">
                 <div id="progressBar" class="h-full bg-gradient-to-r from-red-500 to-cyan-500 transition-all duration-500" style="width: 0%"></div>
             </div>
             <p id="progressText" class="text-xs text-gray-400 mt-1">0 / 1,000,000,000 ERROR (0%)</p>
         </div>
 
-        <div class="terminal p-6 rounded max-w-2xl mx-auto">
-            <button id="connectWalletButton" class="w-full py-3 bg-red-900 hover:bg-red-800 text-white rounded mb-4 transition-all">CONNECT WALLET</button>
-            <p id="networkStatus" class="text-xs text-gray-500 mb-4">Click to connect...</p>
+        <!-- 主功能区 -->
+        <div class="terminal p-5 rounded space-y-4">
+            <button id="connectWalletButton" class="w-full py-3 bg-red-900 hover:bg-red-800 text-white rounded text-sm transition-all">CONNECT WALLET</button>
+            <p id="networkStatus" class="text-xs text-gray-500 text-center">Click to connect...</p>
 
-            <div class="bg-gray-900 p-3 rounded mb-4 text-xs font-mono break-all">
+            <div class="bg-gray-900 p-3 rounded text-xs font-mono break-all text-center">
                 0x0073f743FcAAA1Fc9fC235A886e2Ed60FDd779Eb
-                <button class="ml-2 text-gray-500 hover:text-cyan-400" onclick="copyContract()">Copy</button>
+                <button class="ml-2 text-gray-500 hover:text-cyan-400 text-xs" onclick="copyContract()">Copy</button>
             </div>
 
-            <div class="bg-gray-900 p-3 rounded mb-4 text-xs">
+            <div class="bg-gray-900 p-3 rounded text-xs text-center">
                 <span id="balanceStatus">GT: 0 | ERROR: 0</span>
             </div>
 
             <!-- 认购 -->
-            <div class="mb-6">
-                <label class="block text-left text-xs text-gray-500 mb-1">SUBSCRIBE (integer GT)</label>
-                <input type="text" id="subscribeAmount" placeholder="1, 2, 3..." class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-white text-sm mb-1">
-                <p id="subscribeInfo" class="text-xs text-cyan-400 mb-2">Will receive: 0 ERROR</p>
+            <div class="space-y-2">
+                <label class="block text-left text-xs text-gray-500">SUBSCRIBE (integer GT)</label>
+                <input type="text" id="subscribeAmount" placeholder="1, 2, 3..." class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-white text-sm">
+                <p id="subscribeInfo" class="text-xs text-cyan-400 text-left">Will receive: 0 ERROR</p>
                 <button id="subscribeButton" class="w-full py-2 bg-green-900 hover:bg-green-800 text-white rounded text-sm transition-all disabled:bg-gray-800" disabled>SUBSCRIBE</button>
             </div>
 
             <!-- 转账 -->
-            <div>
-                <label class="block text-left text-xs text-gray-500 mb-1">TRANSFER ERROR</label>
-                <input type="text" id="transferTo" placeholder="0x..." class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-white text-sm mb-1">
-                <input type="text" id="transferAmount" placeholder="amount" class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-white text-sm mt-1 mb-2">
+            <div class="space-y-2">
+                <label class="block text-left text-xs text-gray-500">TRANSFER ERROR</label>
+                <input type="text" id="transferTo" placeholder="0x..." class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-white text-sm">
+                <input type="text" id="transferAmount" placeholder="amount" class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-white text-sm mt-1">
                 <button id="transferButton" class="w-full py-2 bg-cyan-900 hover:bg-cyan-800 text-white rounded text-sm transition-all disabled:bg-gray-800" disabled>TRANSFER</button>
             </div>
         </div>
 
-        <div class="mt-12 text-xs text-gray-600">
+        <!-- 底部声明 -->
+        <div class="mt-8 text-xs text-gray-600">
             © 2025 ERROR Protocol. Page intentionally not found.
         </div>
     </div>
@@ -216,12 +221,13 @@
         function updateSubscribeInfo() {
             const amt = document.getElementById('subscribeAmount').value.trim();
             const num = parseInt(amt);
-            if (!isNaN(num) && num > 0) {
+            const btn = document.getElementById('subscribeButton');
+            if (!isNaN(num) && num > 0 && account) {
                 document.getElementById('subscribeInfo').innerText = `Will receive: ${num * ERROR_PER_GT} ERROR`;
-                document.getElementById('subscribeButton').disabled = false;
+                btn.disabled = false;
             } else {
                 document.getElementById('subscribeInfo').innerText = 'Enter integer GT';
-                document.getElementById('subscribeButton').disabled = true;
+                btn.disabled = true;
             }
         }
 
@@ -248,7 +254,7 @@
         async function transfer() {
             const to = document.getElementById('transferTo').value.trim();
             const amt = document.getElementById('transferAmount').value.trim();
-            if (!web3.utils.isAddress(to) || !amt) return;
+            if (!web3.utils.isAddress(to) || !amt || !account) return;
             const amount = web3.utils.toWei(amt, 'ether');
             const btn = document.getElementById('transferButton');
             try {
@@ -268,7 +274,7 @@
         function copyContract() {
             navigator.clipboard.writeText(ERROR_ADDRESS).then(() => {
                 const n = document.createElement('div');
-                n.className = 'fixed bottom-4 right-4 bg-red-900 text-white px-3 py-1 rounded text-xs';
+                n.className = 'fixed bottom-4 right-4 bg-red-900 text-white px-3 py-1 rounded text-xs z-50';
                 n.textContent = 'Copied!';
                 document.body.appendChild(n);
                 setTimeout(() => n.remove(), 2000);
@@ -280,8 +286,16 @@
             document.getElementById('subscribeButton').onclick = subscribe;
             document.getElementById('transferButton').onclick = transfer;
             document.getElementById('subscribeAmount').oninput = updateSubscribeInfo;
-            document.getElementById('transferTo').oninput = () => document.getElementById('transferButton').disabled = !web3?.utils?.isAddress(document.getElementById('transferTo').value.trim()) || !account;
-            document.getElementById('transferAmount').oninput = () => document.getElementById('transferButton').disabled = !web3?.utils?.isAddress(document.getElementById('transferTo').value.trim()) || !account;
+            document.getElementById('transferTo').oninput = () => {
+                const to = document.getElementById('transferTo').value.trim();
+                const amt = document.getElementById('transferAmount').value.trim();
+                document.getElementById('transferButton').disabled = !web3?.utils?.isAddress(to) || !amt || !account;
+            };
+            document.getElementById('transferAmount').oninput = () => {
+                const to = document.getElementById('transferTo').value.trim();
+                const amt = document.getElementById('transferAmount').value.trim();
+                document.getElementById('transferButton').disabled = !web3?.utils?.isAddress(to) || !amt || !account;
+            };
         });
     </script>
 </body>
