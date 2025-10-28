@@ -100,11 +100,20 @@
                 <span id="balanceStatus">GT: 0 | ERROR: 0</span>
             </div>
 
-            <!-- 认购 -->
+            <!-- 认购 - 防小数输入 -->
             <div class="space-y-2">
-                <label class="block text-left text-xs text-gray-500">SUBSCRIBE (integer GT)</label>
-                <input type="text" id="subscribeAmount" placeholder="1, 2, 3..." class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-white text-sm">
-                <p id="subscribeInfo" class="text-xs text-cyan-400 text-left">Will receive: 0 ERROR</p>
+                <label class="block text-left text-xs text-gray-500">SUBSCRIBE (integer GT only)</label>
+                <input 
+                    type="text" 
+                    id="subscribeAmount" 
+                    inputmode="numeric" 
+                    pattern="[0-9]*" 
+                    placeholder="1, 2, 3..." 
+                    class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-white text-sm"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateSubscribeInfo();"
+                    onpaste="return false">
+                <p id="subscribeInfo" class="text-xs text-cyan-400 text-left">Enter integer GT (e.g., 1, 2, 3)</p>
                 <button id="subscribeButton" class="w-full py-2 bg-green-900 hover:bg-green-800 text-white rounded text-sm transition-all disabled:bg-gray-800" disabled>SUBSCRIBE</button>
             </div>
 
@@ -219,22 +228,25 @@
         }
 
         function updateSubscribeInfo() {
-            const amt = document.getElementById('subscribeAmount').value.trim();
-            const num = parseInt(amt);
+            const input = document.getElementById('subscribeAmount');
+            const value = input.value.trim();
+            const num = parseInt(value);
             const btn = document.getElementById('subscribeButton');
-            if (!isNaN(num) && num > 0 && account) {
-                document.getElementById('subscribeInfo').innerText = `Will receive: ${num * ERROR_PER_GT} ERROR`;
-                btn.disabled = false;
-            } else {
-                document.getElementById('subscribeInfo').innerText = 'Enter integer GT';
+            const info = document.getElementById('subscribeInfo');
+
+            if (value === '' || isNaN(num) || num < 1) {
+                info.innerText = 'Enter integer GT (e.g., 1, 2, 3)';
                 btn.disabled = true;
+            } else {
+                info.innerText = `Will receive: ${num * ERROR_PER_GT} ERROR`;
+                btn.disabled = false;
             }
         }
 
         async function subscribe() {
             const input = document.getElementById('subscribeAmount').value.trim();
             const gtAmount = parseInt(input);
-            if (isNaN(gtAmount) || gtAmount <= 0) return;
+            if (isNaN(gtAmount) || gtAmount < 1) return;
             const value = web3.utils.toWei(gtAmount.toString(), 'ether');
             const btn = document.getElementById('subscribeButton');
             try {
@@ -244,6 +256,8 @@
                 await waitForTransaction(tx.transactionHash);
                 document.getElementById('networkStatus').innerText = 'Success!';
                 await Promise.all([checkBalances(), updateProgress()]);
+                document.getElementById('subscribeAmount').value = '';
+                updateSubscribeInfo();
             } catch (e) {
                 document.getElementById('networkStatus').innerText = e.code === 4001 ? 'Canceled' : 'Failed';
             } finally {
@@ -285,7 +299,13 @@
             document.getElementById('connectWalletButton').onclick = initializeWeb3;
             document.getElementById('subscribeButton').onclick = subscribe;
             document.getElementById('transferButton').onclick = transfer;
-            document.getElementById('subscribeAmount').oninput = updateSubscribeInfo;
+
+            // 认购输入防小数
+            const subInput = document.getElementById('subscribeAmount');
+            subInput.oninput = updateSubscribeInfo;
+            subInput.onpaste = () => false;
+
+            // 转账输入校验
             document.getElementById('transferTo').oninput = () => {
                 const to = document.getElementById('transferTo').value.trim();
                 const amt = document.getElementById('transferAmount').value.trim();
