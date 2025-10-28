@@ -3,124 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Not Found - 认购与转账</title>
-    <link rel="icon" type="image/png" href="https://woofinglabs.github.io/GdogToTheMoon/images/gdog_logo.png">
+    <title>404 - Not Found</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3EError%3C/text%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#0068FF',
-                        secondary: '#18E5A0',
-                        accent: '#FFD700',
-                        dark: '#070808',
-                        'light-gray': '#E5E7EB'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        display: ['Changa One', 'system-ui', 'sans-serif']
-                    },
-                    animation: { 'float': 'float 3s ease-in-out infinite' },
-                    keyframes: { float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-8px)' } } }
-                }
-            }
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+        body { font-family: 'Space Mono', monospace; }
+        .glitch { position: relative; }
+        .glitch::before, .glitch::after {
+            content: '404';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #111;
+            clip-path: inset(0 0 0 0);
+            animation: glitch-anim 2s infinite;
         }
-    </script>
-    <style type="text/tailwindcss">
-        .text-shadow-glow { text-shadow: 0 0 10px rgba(0, 104, 255, 0.5); }
-        .glow-border { box-shadow: 0 0 12px rgba(24, 229, 160, 0.3); }
-        .bg-grid { background-image: url('data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Ccircle cx="1" cy="1" r="1" fill="%230068FF" fill-opacity="0.1"/%3E%3C/svg%3E'); background-size: 20px 20px; }
+        .glitch::before { left: 2px; text-shadow: -2px 0 #f0f; animation-delay: -1s; }
+        .glitch::after { left: -2px; text-shadow: 2px 0 #0ff; }
+        @keyframes glitch-anim {
+            0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+            20% { clip-path: inset(0 0 70% 0); transform: translate(-2px, 2px); }
+            40% { clip-path: inset(33% 0 33% 0); transform: translate(2px, -2px); }
+            60% { clip-path: inset(70% 0 0 0); transform: translate(-2px, 2px); }
+            80% { clip-path: inset(0 0 0 70%); transform: translate(2px, -2px); }
+        }
+        .scanline {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 50%, rgba(255,0,255,0.05) 50%);
+            background-size: 100% 4px;
+            animation: scan 6s linear infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
+        @keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+        .noise {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .blink { animation: blink 1s steps(1) infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .terminal { background: #111; border: 1px solid #333; }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Changa+One&display=swap" rel="stylesheet">
 </head>
-<body class="bg-dark text-white font-sans overflow-x-hidden">
+<body class="bg-black text-green-400 min-h-screen flex items-center justify-center overflow-hidden relative">
+    <div class="scanline"></div>
+    <div class="noise"></div>
 
-    <header class="fixed w-full z-50 bg-dark/90 backdrop-blur-md transition-all duration-300" id="navbar">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer hover:text-primary transition-colors">
-                <div class="w-10 h-10 rounded-full overflow-hidden">
-                    <img src="https://woofinglabs.github.io/GdogToTheMoon/images/gdog_logo.png" alt="ERROR Logo" class="w-full h-full object-cover">
-                </div>
-                <span class="font-display text-3xl text-primary text-shadow-glow">ERROR</span>
+    <div class="container mx-auto px-4 text-center relative z-20">
+        <div class="glitch text-9xl font-bold mb-4">404</div>
+        <h1 class="text-4xl md:text-6xl mb-2 text-red-500">Not Found</h1>
+        <p class="text-xl text-gray-400 mb-8">The page you are looking for does not exist.</p>
+
+        <div class="terminal p-6 rounded max-w-2xl mx-auto mb-8 text-left text-sm">
+            <div class="flex items-center mb-4">
+                <span class="text-red-500 mr-2">$</span>
+                <span class="blink">_</span>
             </div>
-            <button id="menuToggle" class="md:hidden text-2xl text-primary">
-                <i class="fa fa-bars"></i>
-            </button>
+            <p class="text-green-400 mb-2">> Initializing ERROR protocol...</p>
+            <p class="text-yellow-400 mb-2">> Contract: 0x0073f743FcAAA1Fc9fC235A886e2Ed60FDd779Eb</p>
+            <p class="text-cyan-400 mb-2">> Symbol: ERROR | 1 GT = 500,000 ERROR</p>
+            <p class="text-gray-500">> Type 'subscribe' or 'transfer' to continue...</p>
         </div>
-        <div id="mobileMenu" class="md:hidden bg-dark/95 absolute w-full top-full py-4 px-4 hidden">
-            <div class="flex flex-col space-y-4">
-                <a href="#swap" class="hover:text-primary transition-colors py-2 text-white">认购与转账</a>
+
+        <!-- 认购进度 -->
+        <div class="terminal p-4 rounded max-w-2xl mx-auto mb-6">
+            <p class="text-xs text-gray-500 mb-2">PROGRESS</p>
+            <div class="w-full bg-gray-800 rounded h-2 overflow-hidden">
+                <div id="progressBar" class="h-full bg-gradient-to-r from-red-500 to-cyan-500 transition-all duration-500" style="width: 0%"></div>
             </div>
+            <p id="progressText" class="text-xs text-gray-400 mt-1">0 / 1,000,000,000 ERROR (0%)</p>
         </div>
-    </header>
 
-    <section id="swap" class="min-h-screen pt-24 pb-16 bg-grid relative overflow-hidden flex items-center justify-center">
-        <div class="absolute inset-0 bg-gradient-to-b from-primary/10 to-dark pointer-events-none"></div>
-        <div class="absolute top-0 left-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 right-0 w-80 h-80 bg-secondary/10 rounded-full blur-3xl"></div>
-        <div class="container mx-auto px-4 text-center relative z-10">
-            <div class="w-48 h-48 mx-auto mb-8 animate-float">
-                <img src="https://woofinglabs.github.io/GdogToTheMoon/images/gdog_logo.png" alt="ERROR Logo" class="w-full h-full object-cover rounded-full border-4 border-secondary/50 glow-border">
-            </div>
-            <h1 class="font-display text-5xl md:text-7xl mb-6 text-primary text-shadow-glow">Not Found</h1>
-            <p class="text-xl md:text-2xl text-light-gray max-w-3xl mx-auto mb-10">
-                发送整数 GT 认购 ERROR（1 GT = 500,000 ERROR），或转账给他人
-            </p>
+        <div class="terminal p-6 rounded max-w-2xl mx-auto">
+            <button id="connectWalletButton" class="w-full py-3 bg-red-900 hover:bg-red-800 text-white rounded mb-4 transition-all">CONNECT WALLET</button>
+            <p id="networkStatus" class="text-xs text-gray-500 mb-4">Click to connect...</p>
 
-            <div class="bg-dark/80 p-4 rounded-lg border border-primary/20 max-w-2xl mx-auto mb-6">
-                <p class="text-sm text-light-gray mb-2">认购进度</p>
-                <div class="w-full bg-dark/50 rounded-full h-3 overflow-hidden">
-                    <div id="progressBar" class="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500" style="width: 0%"></div>
-                </div>
-                <p id="progressText" class="text-sm text-light-gray mt-2">0 / 1,000,000,000 ERROR (0%)</p>
+            <div class="bg-gray-900 p-3 rounded mb-4 text-xs font-mono break-all">
+                0x0073f743FcAAA1Fc9fC235A886e2Ed60FDd779Eb
+                <button class="ml-2 text-gray-500 hover:text-cyan-400" onclick="copyContract()">Copy</button>
             </div>
 
-            <div class="bg-dark/50 p-6 rounded-lg border border-primary/30 max-w-2xl mx-auto mb-8">
-                <div class="flex flex-col space-y-4">
-                    <button id="connectWalletButton" class="px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all">连接钱包</button>
-                    <p id="networkStatus" class="text-light-gray text-sm">点击连接钱包...</p>
+            <div class="bg-gray-900 p-3 rounded mb-4 text-xs">
+                <span id="balanceStatus">GT: 0 | ERROR: 0</span>
+            </div>
 
-                    <div class="flex items-center bg-dark/80 p-3 rounded-lg border border-primary/20">
-                        <i class="fa fa-link text-accent mr-3"></i>
-                        <span class="font-mono text-sm text-white truncate">0x0073f743FcAAA1Fc9fC235A886e2Ed60FDd779Eb</span>
-                        <button class="ml-3 text-light-gray hover:text-secondary transition-colors" onclick="copyContract()">
-                            <i class="fa fa-copy"></i>
-                        </button>
-                    </div>
+            <!-- 认购 -->
+            <div class="mb-6">
+                <label class="block text-left text-xs text-gray-500 mb-1">SUBSCRIBE (integer GT)</label>
+                <input type="text" id="subscribeAmount" placeholder="1, 2, 3..." class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-white text-sm mb-1">
+                <p id="subscribeInfo" class="text-xs text-cyan-400 mb-2">Will receive: 0 ERROR</p>
+                <button id="subscribeButton" class="w-full py-2 bg-green-900 hover:bg-green-800 text-white rounded text-sm transition-all disabled:bg-gray-800" disabled>SUBSCRIBE</button>
+            </div>
 
-                    <div class="bg-dark/80 p-3 rounded-lg border border-primary/20">
-                        <p id="balanceStatus" class="text-light-gray text-sm">GT余额: 0 | ERROR余额: 0</p>
-                    </div>
-
-                    <div class="flex flex-col space-y-2">
-                        <label class="block text-left text-light-gray mb-2">认购 ERROR（输入整数 GT）</label>
-                        <input type="text" id="subscribeAmount" placeholder="如：1, 2, 3" class="px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary">
-                        <p id="subscribeInfo" class="text-light-gray text-sm">将获得：0 ERROR</p>
-                        <button id="subscribeButton" class="mt-2 px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all disabled:bg-dark/50 disabled:cursor-not-allowed" disabled>认购 ERROR</button>
-                    </div>
-
-                    <div class="flex flex-col space-y-2">
-                        <label class="block text-left text-light-gray mb-2">转账 ERROR</label>
-                        <input type="text" id="transferTo" placeholder="接收地址 0x..." class="px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary">
-                        <input type="text" id="transferAmount" placeholder="数量" class="px-4 py-2 bg-dark/80 border border-primary/20 rounded-lg text-white focus:outline-none focus:border-secondary mt-2">
-                        <button id="transferButton" class="mt-2 px-6 py-3 bg-primary text-white rounded-full font-medium hover:bg-primary/80 transition-all disabled:bg-dark/50 disabled:cursor-not-allowed" disabled>发送 ERROR</button>
-                    </div>
-
-                    <div class="mt-4">
-                        <img src="https://woofinglabs.github.io/GdogToTheMoon/images/gdog_logo.png" alt="ERROR Logo" class="w-16 h-16 mx-auto animate-float">
-                    </div>
-                </div>
+            <!-- 转账 -->
+            <div>
+                <label class="block text-left text-xs text-gray-500 mb-1">TRANSFER ERROR</label>
+                <input type="text" id="transferTo" placeholder="0x..." class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-white text-sm mb-1">
+                <input type="text" id="transferAmount" placeholder="amount" class="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded text-white text-sm mt-1 mb-2">
+                <button id="transferButton" class="w-full py-2 bg-cyan-900 hover:bg-cyan-800 text-white rounded text-sm transition-all disabled:bg-gray-800" disabled>TRANSFER</button>
             </div>
         </div>
-    </section>
 
-    <footer class="bg-dark/95 py-12 border-t border-primary/20">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-light-gray text-sm">© 2025 Not Found 社区。仅限认购与转账功能。</p>
+        <div class="mt-12 text-xs text-gray-600">
+            © 2025 ERROR Protocol. Page intentionally not found.
         </div>
-    </footer>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
@@ -133,23 +129,12 @@
             {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"subscriber","type":"address"},{"indexed":false,"internalType":"uint256","name":"gtAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"g404Amount","type":"uint256"}],"name":"Subscription","type":"event"},
             {"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},
             {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"getRemainingSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
-            {"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},
             {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[],"name":"subscribe","outputs":[],"stateMutability":"payable","type":"function"},
             {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}
         ];
 
-        const chains = {
-            GateLayer: {
-                chainId: 10088,
-                chainName: 'Gate Layer',
-                rpcUrl: 'https://gatelayer-mainnet.gatenode.cc',
-                blockExplorer: 'https://www.gatescan.org/gatelayer/',
-                nativeCurrency: { name: 'GT', symbol: 'GT', decimals: 18 }
-            }
-        };
+        const chains = { GateLayer: { chainId: 10088, chainName: 'Gate Layer', rpcUrl: 'https://gatelayer-mainnet.gatenode.cc', nativeCurrency: { name: 'GT', symbol: 'GT', decimals: 18 } } };
 
         let web3, account, errorContract;
 
@@ -159,33 +144,33 @@
             let attempts = 0;
             while (attempts < maxAttempts) {
                 receipt = await web3.eth.getTransactionReceipt(txHash);
-                if (receipt) return receipt.status ? receipt : Promise.reject(new Error('交易失败'));
+                if (receipt) return receipt.status ? receipt : Promise.reject(new Error('Failed'));
                 await new Promise(r => setTimeout(r, 2000));
                 attempts++;
             }
-            throw new Error('交易超时');
+            throw new Error('Timeout');
         }
 
         async function retry(fn, max = 10) {
             for (let i = 0; i < max; i++) {
                 try { return await fn(); } catch { await new Promise(r => setTimeout(r, 2000)); }
             }
-            throw new Error('查询失败');
+            throw new Error('Failed');
         }
 
         async function initializeWeb3() {
-            if (!window.ethereum) return document.getElementById('networkStatus').innerText = '请安装MetaMask';
+            if (!window.ethereum) return document.getElementById('networkStatus').innerText = 'Install MetaMask';
             web3 = new Web3(window.ethereum);
             try {
                 await window.ethereum.request({ method: 'eth_requestAccounts' });
                 account = (await web3.eth.getAccounts())[0];
-                document.getElementById('connectWalletButton').innerText = `已连接: ${account.slice(0,6)}...${account.slice(-4)}`;
+                document.getElementById('connectWalletButton').innerText = `CONNECTED: ${account.slice(0,6)}...${account.slice(-4)}`;
                 await switchNetwork('GateLayer');
                 errorContract = new web3.eth.Contract(errorAbi, ERROR_ADDRESS);
                 await Promise.all([checkBalances(), updateProgress()]);
-                document.getElementById('networkStatus').innerText = '已连接 Gate Layer';
+                document.getElementById('networkStatus').innerText = 'Connected to Gate Layer';
             } catch (e) {
-                document.getElementById('networkStatus').innerText = '连接失败: ' + e.message;
+                document.getElementById('networkStatus').innerText = 'Failed: ' + e.message;
             }
         }
 
@@ -197,7 +182,7 @@
                 if (e.code === 4902) {
                     await window.ethereum.request({ method: 'wallet_addEthereumChain', params: [{
                         chainId: `0x${c.chainId.toString(16)}`, chainName: c.chainName, rpcUrls: [c.rpcUrl],
-                        nativeCurrency: c.nativeCurrency, blockExplorerUrls: [c.blockExplorer]
+                        nativeCurrency: c.nativeCurrency
                     }] });
                 } else throw e;
             }
@@ -210,10 +195,9 @@
                 const errorBal = await retry(() => errorContract.methods.balanceOf(account).call());
                 const gtFmt = Number(web3.utils.fromWei(gt, 'ether')).toFixed(4);
                 const errorFmt = Number(web3.utils.fromWei(errorBal, 'ether')).toFixed(0);
-                document.getElementById('balanceStatus').innerHTML = `GT余额: ${gtFmt} | ERROR余额: ${errorFmt}`;
-                updateSubscribeButton();
+                document.getElementById('balanceStatus').innerText = `GT: ${gtFmt} | ERROR: ${errorFmt}`;
             } catch (e) {
-                document.getElementById('networkStatus').innerText = '余额查询失败';
+                document.getElementById('networkStatus').innerText = 'Balance query failed';
             }
         }
 
@@ -225,7 +209,7 @@
                 document.getElementById('progressBar').style.width = `${percent}%`;
                 document.getElementById('progressText').innerText = `${(totalNum / 1e18).toFixed(0)} / ${MAX_SUPPLY} ERROR (${percent.toFixed(2)}%)`;
             } catch (e) {
-                document.getElementById('progressText').innerText = '进度加载失败';
+                document.getElementById('progressText').innerText = 'Progress failed';
             }
         }
 
@@ -233,25 +217,12 @@
             const amt = document.getElementById('subscribeAmount').value.trim();
             const num = parseInt(amt);
             if (!isNaN(num) && num > 0) {
-                document.getElementById('subscribeInfo').innerText = `将获得：${num * ERROR_PER_GT} ERROR`;
+                document.getElementById('subscribeInfo').innerText = `Will receive: ${num * ERROR_PER_GT} ERROR`;
                 document.getElementById('subscribeButton').disabled = false;
             } else {
-                document.getElementById('subscribeInfo').innerText = '请输入整数 GT';
+                document.getElementById('subscribeInfo').innerText = 'Enter integer GT';
                 document.getElementById('subscribeButton').disabled = true;
             }
-        }
-
-        function updateSubscribeButton() {
-            const input = document.getElementById('subscribeAmount').value.trim();
-            const btn = document.getElementById('subscribeButton');
-            btn.disabled = !input || isNaN(parseInt(input)) || !account;
-        }
-
-        function updateTransferButton() {
-            const to = document.getElementById('transferTo').value.trim();
-            const amt = document.getElementById('transferAmount').value.trim();
-            const btn = document.getElementById('transferButton');
-            btn.disabled = !web3.utils.isAddress(to) || !amt || isNaN(amt) || Number(amt) <= 0 || !account;
         }
 
         async function subscribe() {
@@ -261,16 +232,16 @@
             const value = web3.utils.toWei(gtAmount.toString(), 'ether');
             const btn = document.getElementById('subscribeButton');
             try {
-                btn.disabled = true; btn.innerHTML = '认购中...';
-                document.getElementById('networkStatus').innerText = '发送交易...';
+                btn.disabled = true; btn.innerText = 'SUBSCRIBING...';
+                document.getElementById('networkStatus').innerText = 'Sending...';
                 const tx = await errorContract.methods.subscribe().send({ from: account, value });
                 await waitForTransaction(tx.transactionHash);
-                document.getElementById('networkStatus').innerText = '认购成功！';
+                document.getElementById('networkStatus').innerText = 'Success!';
                 await Promise.all([checkBalances(), updateProgress()]);
             } catch (e) {
-                document.getElementById('networkStatus').innerText = e.code === 4001 ? '用户取消' : '认购失败';
+                document.getElementById('networkStatus').innerText = e.code === 4001 ? 'Canceled' : 'Failed';
             } finally {
-                btn.disabled = false; btn.innerHTML = '认购 ERROR';
+                btn.disabled = false; btn.innerText = 'SUBSCRIBE';
             }
         }
 
@@ -281,26 +252,26 @@
             const amount = web3.utils.toWei(amt, 'ether');
             const btn = document.getElementById('transferButton');
             try {
-                btn.disabled = true; btn.innerHTML = '发送中...';
-                document.getElementById('networkStatus').innerText = '发送交易...';
+                btn.disabled = true; btn.innerText = 'TRANSFERRING...';
+                document.getElementById('networkStatus').innerText = 'Sending...';
                 const tx = await errorContract.methods.transfer(to, amount).send({ from: account });
                 await waitForTransaction(tx.transactionHash);
-                document.getElementById('networkStatus').innerText = '转账成功！';
+                document.getElementById('networkStatus').innerText = 'Transferred!';
                 await checkBalances();
             } catch (e) {
-                document.getElementById('networkStatus').innerText = e.code === 4001 ? '用户取消' : '转账失败';
+                document.getElementById('networkStatus').innerText = e.code === 4001 ? 'Canceled' : 'Failed';
             } finally {
-                btn.disabled = false; btn.innerHTML = '发送 ERROR';
+                btn.disabled = false; btn.innerText = 'TRANSFER';
             }
         }
 
         function copyContract() {
             navigator.clipboard.writeText(ERROR_ADDRESS).then(() => {
                 const n = document.createElement('div');
-                n.className = 'fixed bottom-4 right-4 bg-primary text-white px-4 py-2 rounded-lg shadow-lg z-50';
-                n.textContent = '合约地址已复制！';
+                n.className = 'fixed bottom-4 right-4 bg-red-900 text-white px-3 py-1 rounded text-xs';
+                n.textContent = 'Copied!';
                 document.body.appendChild(n);
-                setTimeout(() => { n.style.opacity = '0'; n.style.transition = 'opacity 0.3s'; setTimeout(() => n.remove(), 300); }, 2000);
+                setTimeout(() => n.remove(), 2000);
             });
         }
 
@@ -309,20 +280,8 @@
             document.getElementById('subscribeButton').onclick = subscribe;
             document.getElementById('transferButton').onclick = transfer;
             document.getElementById('subscribeAmount').oninput = updateSubscribeInfo;
-            document.getElementById('transferTo').oninput = updateTransferButton;
-            document.getElementById('transferAmount').oninput = updateTransferButton;
-
-            document.getElementById('menuToggle').onclick = () => {
-                const m = document.getElementById('mobileMenu');
-                m.classList.toggle('hidden');
-                document.getElementById('menuToggle').innerHTML = m.classList.contains('hidden') ? '<i class="fa fa-bars"></i>' : '<i class="fa fa-times"></i>';
-            };
-
-            window.onscroll = () => {
-                const nav = document.getElementById('navbar');
-                nav.classList.toggle('bg-dark/95', window.scrollY > 50);
-                nav.classList.toggle('shadow-lg', window.scrollY > 50);
-            };
+            document.getElementById('transferTo').oninput = () => document.getElementById('transferButton').disabled = !web3?.utils?.isAddress(document.getElementById('transferTo').value.trim()) || !account;
+            document.getElementById('transferAmount').oninput = () => document.getElementById('transferButton').disabled = !web3?.utils?.isAddress(document.getElementById('transferTo').value.trim()) || !account;
         });
     </script>
 </body>
