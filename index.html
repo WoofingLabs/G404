@@ -96,6 +96,7 @@
                 <button class="ml-2 text-gray-500 hover:text-cyan-400 text-xs" onclick="copyContract()">Copy</button>
             </div>
 
+            <!-- 这里是唯一改动的 UI 部分 -->
             <div class="bg-gray-900 p-3 rounded text-xs text-center">
                 <span id="balanceStatus">GT: 0 | ERROR: 0</span>
             </div>
@@ -202,18 +203,25 @@
             }
         }
 
+        // ------------------- 唯一改动的函数 -------------------
         async function checkBalances() {
             if (!account) return;
             try {
                 const gt = await retry(() => web3.eth.getBalance(account));
                 const errorBal = await retry(() => errorContract.methods.balanceOf(account).call());
+
+                // GT 保留 4 位小数
                 const gtFmt = Number(web3.utils.fromWei(gt, 'ether')).toFixed(4);
-                const errorFmt = Number(web3.utils.fromWei(errorBal, 'ether')).toFixed(0);
+
+                // ERROR 直接除以 1e18 并保留整数（合约里是 18 位小数）
+                const errorFmt = (BigInt(errorBal) / 1000000000000000000n).toString();
+
                 document.getElementById('balanceStatus').innerText = `GT: ${gtFmt} | ERROR: ${errorFmt}`;
             } catch (e) {
                 document.getElementById('networkStatus').innerText = 'Balance query failed';
             }
         }
+        // -----------------------------------------------------
 
         async function updateProgress() {
             try {
@@ -300,12 +308,10 @@
             document.getElementById('subscribeButton').onclick = subscribe;
             document.getElementById('transferButton').onclick = transfer;
 
-            // 认购输入防小数
             const subInput = document.getElementById('subscribeAmount');
             subInput.oninput = updateSubscribeInfo;
             subInput.onpaste = () => false;
 
-            // 转账输入校验
             document.getElementById('transferTo').oninput = () => {
                 const to = document.getElementById('transferTo').value.trim();
                 const amt = document.getElementById('transferAmount').value.trim();
