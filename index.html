@@ -96,12 +96,11 @@
                 <button class="ml-2 text-gray-500 hover:text-cyan-400 text-xs" onclick="copyContract()">Copy</button>
             </div>
 
-            <!-- 这里是唯一改动的 UI 部分 -->
             <div class="bg-gray-900 p-3 rounded text-xs text-center">
                 <span id="balanceStatus">GT: 0 | ERROR: 0</span>
             </div>
 
-            <!-- 认购 - 防小数输入 -->
+            <!-- 认购 -->
             <div class="space-y-2">
                 <label class="block text-left text-xs text-gray-500">SUBSCRIBE (integer GT only)</label>
                 <input 
@@ -127,7 +126,6 @@
             </div>
         </div>
 
-        <!-- 底部声明 -->
         <div class="mt-8 text-xs text-gray-600">
             © 2025 ERROR Protocol. Page intentionally not found.
         </div>
@@ -136,8 +134,8 @@
     <script src="https://cdn.jsdelivr.net/npm/web3@1.7.0/dist/web3.min.js"></script>
     <script>
         const ERROR_ADDRESS = '0x0073f743FcAAA1Fc9fC235A886e2Ed60FDd779Eb';
-        const MAX_SUPPLY = 1000000000;
-        const ERROR_PER_GT = 500000;
+        const MAX_SUPPLY = 1_000_000_000;  // 1 billion ERROR
+        const ERROR_PER_GT = 500_000;
 
         const errorAbi = [
             {"inputs":[],"stateMutability":"nonpayable","type":"constructor"},
@@ -146,7 +144,8 @@
             {"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
             {"inputs":[],"name":"subscribe","outputs":[],"stateMutability":"payable","type":"function"},
-            {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}
+            {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+            {"inputs":[],"name":"getRemainingSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}
         ];
 
         const chains = { GateLayer: { chainId: 10088, chainName: 'Gate Layer', rpcUrl: 'https://gatelayer-mainnet.gatenode.cc', nativeCurrency: { name: 'GT', symbol: 'GT', decimals: 18 } } };
@@ -203,34 +202,34 @@
             }
         }
 
-        // ------------------- 唯一改动的函数 -------------------
+        // 修复：ERROR 余额直接读取整数
         async function checkBalances() {
             if (!account) return;
             try {
                 const gt = await retry(() => web3.eth.getBalance(account));
                 const errorBal = await retry(() => errorContract.methods.balanceOf(account).call());
 
-                // GT 保留 4 位小数
                 const gtFmt = Number(web3.utils.fromWei(gt, 'ether')).toFixed(4);
-
-                // ERROR 直接除以 1e18 并保留整数（合约里是 18 位小数）
-                const errorFmt = (BigInt(errorBal) / 1000000000000000000n).toString();
+                const errorFmt = errorBal;  // 直接是整数 ERROR 数量
 
                 document.getElementById('balanceStatus').innerText = `GT: ${gtFmt} | ERROR: ${errorFmt}`;
             } catch (e) {
+                console.error(e);
                 document.getElementById('networkStatus').innerText = 'Balance query failed';
             }
         }
-        // -----------------------------------------------------
 
+        // 修复：totalSupply 直接是整数
         async function updateProgress() {
             try {
                 const total = await retry(() => errorContract.methods.totalSupply().call());
                 const totalNum = Number(total);
-                const percent = (totalNum / (MAX_SUPPLY * 1e18)) * 100;
-                document.getElementById('progressBar').style.width = `${percent}%`;
-                document.getElementById('progressText').innerText = `${(totalNum / 1e18).toFixed(0)} / ${MAX_SUPPLY} ERROR (${percent.toFixed(2)}%)`;
+                const percent = (totalNum / MAX_SUPPLY) * 100;
+
+                document.getElementById('progressBar').style.width = `${Math.min(percent, 100)}%`;
+                document.getElementById('progressText').innerText = `${totalNum.toLocaleString()} / ${MAX_SUPPLY.toLocaleString()} ERROR (${percent.toFixed(2)}%)`;
             } catch (e) {
+                console.error(e);
                 document.getElementById('progressText').innerText = 'Progress failed';
             }
         }
@@ -246,7 +245,7 @@
                 info.innerText = 'Enter integer GT (e.g., 1, 2, 3)';
                 btn.disabled = true;
             } else {
-                info.innerText = `Will receive: ${num * ERROR_PER_GT} ERROR`;
+                info.innerText = `Will receive: ${(num * ERROR_PER_GT).toLocaleString()} ERROR`;
                 btn.disabled = false;
             }
         }
@@ -277,7 +276,7 @@
             const to = document.getElementById('transferTo').value.trim();
             const amt = document.getElementById('transferAmount').value.trim();
             if (!web3.utils.isAddress(to) || !amt || !account) return;
-            const amount = web3.utils.toWei(amt, 'ether');
+            const amount = amt;  // 直接传整数 ERROR
             const btn = document.getElementById('transferButton');
             try {
                 btn.disabled = true; btn.innerText = 'TRANSFERRING...';
